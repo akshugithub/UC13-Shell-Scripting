@@ -1,1 +1,7 @@
 https://www.2daygeek.com/linux-shell-script-to-monitor-cpu-memory-swap-usage-send-email/
+
+https://www.2daygeek.com/linux-shell-script-to-monitor-cpu-utilization-usage-and-send-email/
+
+to establish connection for sending email-----https://www.howtoforge.com/tutorial/configure-postfix-to-use-gmail-as-a-mail-relay/
+
+password for gmail auth(to be given in sasl_passwd file): litahawlfemfeugb
