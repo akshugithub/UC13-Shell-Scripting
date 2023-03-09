@@ -2,18 +2,35 @@ printf "Memory\t\tDisk\t\tCPU\n" > output.txt
 MEMORY=$(free -m | awk 'NR==2{printf "%.2f%%\t\t", $3*100/$2 }'| awk '{ print $1}' | cut -d'%' -f1 )
 DISK=$(df -h | awk '$NF=="/"{printf "%s\t\t", $5}'| awk '{ print $1}' | cut -d'%' -f1 )
 CPU=$(top -bn1 | grep load | awk '{printf "%.2f%%\t\t\n", $(NF-2)}'| awk '{ print $1}' | cut -d'%' -f1 )
+
 #echo "$MEMORY$DISK$CPU"
+
 MEMORY=$( printf "%.0f" $MEMORY )
 DISK=$( printf "%.0f" $DISK )
 CPU=$( printf "%.0f" $CPU )
+
 printf "$MEMORY\t\t$DISK\t\t$CPU\n" >> output.txt
 
-ADMIN="akshaya.m@lntinfotech.com"
-ALERT=15
-df -H | grep -vE 'abc:/xyz/pqr | tmpfs |cdrom' | awk '{ print $5 " " $1 }' | while read output; do
-  usep=$(echo $output | awk '{ print $1}' | cut -d'%' -f1 )
-  partition=$(echo $output | awk '{ print $2 }' )
-    if [ $usep -ge $ALERT ]; then
-      mail -s "Alert: Almost out of disk space $usep" $ADMIN
-    fi
-  done
+file = "/opt/scripts/values.properties"
+
+PROPS_FILE=./values.properties
+source $PROPS_FILE
+
+if [ $MEMORY -ge $memoryvalue ]; then
+mail -s 'Memory Alert' $email << EOF
+memory space Used: $MEMORY%
+EOF
+fi
+
+
+if [ $DISK -ge $diskvalue ]; then
+mail -s 'Disk Usage Alert' $email << EOF
+disk usage high: $DISK%
+EOF
+fi
+
+if [ $CPU -ge $CPUvalue ]; then
+mail -s 'CPU utilization high' $email << EOF
+CPU utilization high: $CPU%
+EOF
+fi
